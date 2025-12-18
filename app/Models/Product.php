@@ -50,39 +50,42 @@ class Product extends Model
         });
     }
 
-    // ==================== RELATIONSHIPS ====================
+// ==================== RELATIONSHIPS ====================
 
-    /**
-     * Produk termasuk dalam satu kategori.
-     */
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+/**
+ * Produk termasuk dalam satu kategori.
+ */
+public function category()
+{
+    return $this->belongsTo(Category::class);
+}
 
-    /**
-     * Produk memiliki banyak gambar.
-     */
-    public function images()
-    {
-        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
-    }
+/**
+ * Produk memiliki banyak gambar.
+ * (AKAN DIPAKAI DI HARI 6)
+ */
+// public function images()
+// {
+//     return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+// }
 
-    /**
-     * Gambar utama produk.
-     */
-    public function primaryImage()
-    {
-        return $this->hasOne(ProductImage::class)->where('is_primary', true);
-    }
+/**
+ * Gambar utama produk.
+ * (AKAN DIPAKAI DI HARI 6)
+ */
+// public function primaryImage()
+// {
+//     return $this->hasOne(ProductImage::class)->where('is_primary', true);
+// }
 
-    /**
-     * Item pesanan yang mengandung produk ini.
-     */
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+/**
+ * Item pesanan yang mengandung produk ini.
+ */
+public function orderItems()
+{
+    return $this->hasMany(OrderItem::class);
+}
+
 
     // ==================== ACCESSORS ====================
 
@@ -135,12 +138,10 @@ class Product extends Model
      * URL gambar utama atau placeholder.
      */
     public function getImageUrlAttribute(): string
-    {
-        if ($this->primaryImage) {
-            return $this->primaryImage->image_url;
-        }
-        return asset('images/no-image.png');
-    }
+{
+    return asset('images/no-image.png');
+}
+
 
     /**
      * Cek apakah produk tersedia (aktif dan ada stok).
