@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
@@ -15,7 +14,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-    
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -85,6 +84,8 @@ Route::middleware(['auth', 'admin'])
         ->name('auth.google.callback');
 });
 
+// routes/web.php
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -92,6 +93,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
+
+
+// ================================================
+// FILE: routes/web.php
+// FUNGSI: Definisi semua route website
+// ================================================
+
+
+
+// ================================================
+// HALAMAN PUBLIK (Tanpa Login)
+// ================================================
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');

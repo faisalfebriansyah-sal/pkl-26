@@ -1,5 +1,3 @@
-import './bootstrap';
-
 // ================================================
 // FILE: resources/js/app.js
 // FUNGSI: Entry point untuk semua JavaScript
