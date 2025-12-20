@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <div class="col-lg-6 d-none d-lg-block text-center">
-                    <img src="{{ asset('images/hero-shopping.svg') }}"
+                    <img src="https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/229/2025/05/02/Sejarah-Perjalanan-Hidup-Raja-Hayam-Wuruk-4189589223.jpg"
                          alt="Shopping" class="img-fluid" style="max-height: 400px;">
                 </div>
             </div>
@@ -71,7 +71,7 @@
             <div class="row g-4">
                 @foreach($featuredProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
-                        @include('profile.partials.product-card', ['product' => $product])
+                        @include('partials.product-card', ['product' => $product])
                     </div>
                 @endforeach
             </div>
@@ -115,7 +115,7 @@
             <div class="row g-4">
                 @foreach($latestProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
-                        @include('profile.partials.product-card', ['product' => $product])
+                        @include('partials.product-card', ['product' => $product])
                     </div>
                 @endforeach
             </div>
