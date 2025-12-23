@@ -8,7 +8,7 @@
         {{-- Logo & Brand --}}
         <a class="navbar-brand text-primary" href="{{ route('home') }}">
             <i class="bi bi-bag-heart-fill me-2"></i>
-            TokoOnline
+            Toko Komik
         </a>
 
         {{-- Mobile Toggle --}}
@@ -76,7 +76,7 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center"
                            href="#" id="userDropdown"
                            data-bs-toggle="dropdown">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                            <img src="{{ auth()->user()->avatar_url }}"
                                  class="rounded-circle me-2"
                                  width="32" height="32"
                                  alt="{{ auth()->user()->name }}">

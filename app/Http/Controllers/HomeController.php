@@ -28,15 +28,13 @@ class HomeController extends Controller
         // - Hanya yang aktif
         // - Hitung jumlah produk di masing-masing kategori
         // ================================================
-
-        
         $categories = Category::query()
             ->active()                    // Scope: hanya is_active = true
-            ->withCount(['Products' => function($q) {
+            ->withCount(['activeProducts' => function($q) {
                 $q->where('is_active', true)
                   ->where('stock', '>', 0);
             }])
-            ->having('products_count', '>', 0)  // Hanya yang punya produk
+            ->having('active_products_count', '>', 0)  // Hanya yang punya produk
             ->orderBy('name')
             ->take(6)                     // Batasi 6 kategori
             ->get();
@@ -47,7 +45,7 @@ class HomeController extends Controller
         // - Aktif dan ada stok
         // ================================================
         $featuredProducts = Product::query()
-            ->with(['category'])  // Eager load untuk performa
+            ->with(['category', 'primaryImage'])  // Eager load untuk performa
             ->active()                             // Scope: is_active = true
             ->inStock()                            // Scope: stock > 0
             ->featured()                           // Scope: is_featured = true
@@ -60,7 +58,7 @@ class HomeController extends Controller
         // - Urutkan dari yang paling baru
         // ================================================
         $latestProducts = Product::query()
-            ->with(['category'])
+            ->with(['category', 'primaryImage'])
             ->active()
             ->inStock()
             ->latest()         // Order by created_at DESC
