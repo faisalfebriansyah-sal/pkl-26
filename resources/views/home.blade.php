@@ -1,4 +1,4 @@
- {{-- ================================================
+{{-- ================================================
      FILE: resources/views/home.blade.php
      FUNGSI: Halaman utama website
      ================================================ --}}
@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <div class="col-lg-6 d-none d-lg-block text-center">
-                    <img src="https://static.promediateknologi.id/crop/0x0:0x0/0x0/webp/photo/p2/229/2025/05/02/Sejarah-Perjalanan-Hidup-Raja-Hayam-Wuruk-4189589223.jpg"
+                    <img src="https://img.utdstc.com/icon/5bc/95b/5bc95b6839df46e765f42356a7cad6e22a71987b52da6fc16102451e1bd9ca5f:200"
                          alt="Shopping" class="img-fluid" style="max-height: 400px;">
                 </div>
             </div>

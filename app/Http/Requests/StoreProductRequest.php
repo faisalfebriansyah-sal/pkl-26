@@ -72,4 +72,4 @@ class StoreProductRequest extends FormRequest
             'is_featured' => $this->boolean('is_featured'),
         ]);
     }
-}
+}   

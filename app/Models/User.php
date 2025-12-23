@@ -42,7 +42,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
@@ -59,10 +59,17 @@ class User extends Authenticatable
     /**
      * User memiliki banyak item wishlist.
      */
-    public function wishlists()
-    {
-        return $this->hasMany(Wishlist::class);
-    }
+// app/Models/User.php
+
+public function wishlists()
+{
+    // Relasi User ke Product melalui tabel wishlists
+    return $this->belongsToMany(Product::class, 'wishlists')
+                ->withTimestamps(); // Agar created_at/updated_at di pivot terisi
+}
+
+// Helper untuk cek apakah user sudah wishlist produk tertentu
+
 
     /**
      * User memiliki banyak pesanan.
@@ -78,7 +85,7 @@ class User extends Authenticatable
     public function wishlistProducts()
     {
         return $this->belongsToMany(Product::class, 'wishlists')
-            ->withTimestamps();
+                    ->withTimestamps();
     }
 
     // ==================== HELPER METHODS ====================
@@ -105,11 +112,22 @@ class User extends Authenticatable
     public function hasInWishlist(Product $product): bool
     {
         return $this->wishlists()
-            ->where('product_id', $product->id)
-            ->exists();
+                    ->where('product_id', $product->id)
+                    ->exists();
     }
+// app/Models/User.php
 
-    public function getAvatarUrlAttribute(): string
+// Tambahkan accessor untuk avatar URL
+
+/**
+ * Get the avatar URL.
+ * Accessor ini otomatis dipanggil saat kita akses $user->avatar_url
+ * Logika Prioritas:
+ * 1. Cek Storage Lokal: Apakah user upload file custom? Jika ya, return URL local storage.
+ * 2. Cek URL Eksternal: Apakah user login via Google? Jika ya, return URL dari Google.
+ * 3. Fallback: Gunakan Gravatar berdasarkan hash email agar user tidak tampil polos.
+ */
+public function getAvatarUrlAttribute(): string
 {
     // Prioritas 1: Avatar yang di-upload (file fisik ada di server)
     // Kita harus cek Storage::exists() agar tidak broken image jika file-nya terhapus manual.
@@ -149,4 +167,5 @@ public function getInitialsAttribute(): string
     // Ambil maksimal 2 huruf pertama saja
     return substr($initials, 0, 2);
 }
+
 }

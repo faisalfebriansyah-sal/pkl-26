@@ -13,7 +13,7 @@
         <i class="bi bi-cart3 me-2"></i>Keranjang Belanja
     </h2>
 
-    @if($cart && $cart->items->count())
+    @if($cart && $cart->itxems->count())
         <div class="row">
             {{-- Cart Items --}}
             <div class="col-lg-8 mb-4">

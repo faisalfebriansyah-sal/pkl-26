@@ -11,25 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+                Schema::create('orders', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('order_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            // Restrict delete: jangan hapus produk kalau ada di order
-            $table->foreignId('product_id')
-                  ->constrained()
-                  ->restrictOnDelete();
+            $table->string('status')->default('pending'); // pending, shipped, done
+            $table->string('payment_status')->default('unpaid'); // paid, unpaid
 
-            // Snapshot data produk saat order
-            // (karena harga/nama produk bisa berubah di kemudian hari)
-            $table->string('product_name');
-            $table->decimal('price', 12, 2);
-            $table->integer('quantity');
-            $table->decimal('subtotal', 15, 2);
+            $table->decimal('total', 15, 2)->default(0);
             $table->timestamps();
         });
+
     }
 
     /**
