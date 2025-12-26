@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class CartItem extends Model
@@ -9,9 +10,11 @@ class CartItem extends Model
     protected $fillable = [
         'cart_id',
         'product_id',
-        'quantity',
-        'price',
+        'qty',
+        
     ];
+
+    protected $appends = ['subtotal'];
 
     public function cart()
     {
@@ -21,5 +24,10 @@ class CartItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function getSubtotalAttribute()
+    {
+        return $this->qty * $this->product->price;
     }
 }

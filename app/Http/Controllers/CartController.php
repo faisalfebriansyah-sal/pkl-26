@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/CartController.php
 
 namespace App\Http\Controllers;
 
@@ -30,12 +29,12 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
+            'qty' => 'required|integer|min:1'
         ]);
 
         try {
             $product = Product::findOrFail($request->product_id);
-            $this->cartService->addProduct($product, $request->quantity);
+            $this->cartService->addProduct($product, $request->qty);
 
             return back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
         } catch (\Exception $e) {
@@ -45,10 +44,10 @@ class CartController extends Controller
 
     public function update(Request $request, $itemId)
     {
-        $request->validate(['quantity' => 'required|integer|min:0']);
+        $request->validate(['qty' => 'required|integer|min:0']);
 
         try {
-            $this->cartService->updateQuantity($itemId, $request->quantity);
+            $this->cartService->updateqty($itemId, $request->qty);
             return back()->with('success', 'Keranjang diperbarui.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

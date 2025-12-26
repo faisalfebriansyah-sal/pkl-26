@@ -35,7 +35,7 @@ class CartService
      * Menambahkan produk ke keranjang.
      * Handle logika: Baru vs Existing, dan Cek Stok.
      */
-    public function addProduct(Product $product, int $quantity = 1): void
+    public function addProduct(Product $product, int $qty = 1): void
     {
         $cart = $this->getCart();
 
@@ -44,25 +44,25 @@ class CartService
 
         if ($existingItem) {
             // CASE A: Produk SUDAH ADA, update jumlahnya
-            $newQuantity = $existingItem->quantity + $quantity;
+            $newqty = $existingItem->qty + $qty;
 
             // Validasi Stok (Penting!)
             // Jangan sampai user memasukkan barang melebihi stok gudang.
-            if ($newQuantity > $product->stock) {
+            if ($newqty > $product->stock) {
                 throw new \Exception("Stok tidak mencukupi. Maksimal: {$product->stock}");
             }
 
-            $existingItem->update(['quantity' => $newQuantity]);
+            $existingItem->update(['qty' => $newqty]);
         } else {
             // CASE B: Produk BARU, buat item baru
             // Validasi Stok Awal
-            if ($quantity > $product->stock) {
+            if ($qty > $product->stock) {
                 throw new \Exception("Stok tidak mencukupi.");
             }
 
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => $quantity,
+                'qty' => $qty,
             ]);
         }
 
@@ -74,7 +74,7 @@ class CartService
     /**
      * Mengupdate jumlah item (misal dari halaman keranjang).
      */
-    public function updateQuantity(int $itemId, int $quantity): void
+    public function updateqty(int $itemId, int $qty): void
     {
         $item = CartItem::findOrFail($itemId);
         $product = $item->product;
@@ -84,14 +84,14 @@ class CartService
         $this->verifyCartOwnership($item->cart);
 
         // Validasi Stok Real-time
-        if ($quantity > $product->stock) {
+        if ($qty > $product->stock) {
             throw new \Exception("Stok tidak mencukupi. Tersisa: {$product->stock}");
         }
 
-        if ($quantity <= 0) {
+        if ($qty <= 0) {
             $item->delete(); // Jika diupdate jadi 0 atau minus, hapus saja.
         } else {
-            $item->update(['quantity' => $quantity]);
+            $item->update(['qty' => $qty]);
         }
     }
 
@@ -133,8 +133,8 @@ class CartService
 
             if ($existingUserItem) {
                 // Skenario: User sudah punya produk X, Tamu juga punya produk X.
-                // Solusi: Tambahkan quantity (Merge)
-                $existingUserItem->increment('quantity', $item->quantity);
+                // Solusi: Tambahkan qty (Merge)
+                $existingUserItem->increment('qty', $item->qty);
             } else {
                 // Skenario: User belum punya.
                 // Solusi: Pindahkan kepemilikan item ke cart user.

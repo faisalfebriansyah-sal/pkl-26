@@ -111,7 +111,7 @@
                                 <div class="input-group" style="width: 140px;">
                                     <button type="button" class="btn btn-outline-secondary"
                                             onclick="decrementQty()">-</button>
-                                    <input type="number" name="quantity" id="quantity"
+                                    <input type="number" name="qty" id="qty"
                                            value="1" min="1" max="{{ $product->stock }}"
                                            class="form-control text-center">
                                     <button type="button" class="btn btn-outline-secondary"
@@ -163,14 +163,14 @@
 @push('scripts')
 <script>
     function incrementQty() {
-        const input = document.getElementById('quantity');
+        const input = document.getElementById('qty');
         const max = parseInt(input.max);
         if (parseInt(input.value) < max) {
             input.value = parseInt(input.value) + 1;
         }
     }
     function decrementQty() {
-        const input = document.getElementById('quantity');
+        const input = document.getElementById('qty');
         if (parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
         }

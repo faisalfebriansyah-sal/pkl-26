@@ -17,8 +17,13 @@ return new class extends Migration {
                   ->constrained()
                   ->cascadeOnDelete();
 
-            $table->integer('qty');
+            // Jumlah barang
+            $table->integer('qty')->default(1);
+
             $table->timestamps();
+
+            // Satu produk hanya boleh ada sekali di keranjang yang sama
+            $table->unique(['cart_id', 'product_id']);
         });
     }
 
