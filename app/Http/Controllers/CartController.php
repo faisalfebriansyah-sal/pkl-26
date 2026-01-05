@@ -29,15 +29,15 @@ class CartController extends Controller
     {
         $request->validate([
     'product_id' => 'required|exists:products,id',
-    'quantity' => 'nullable|integer|min:1'
+    'qty' => 'nullable|integer|min:1'
 ]);
 
 
         try {
             $product = Product::findOrFail($request->product_id);
-            $quantity = (int) $request->input('quantity', 1);
+            $qty = (int) $request->input('qty', 1);
 
-$this->cartService->addProduct($product, $quantity);
+$this->cartService->addProduct($product, $qty);
 
 
             return back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
@@ -48,10 +48,10 @@ $this->cartService->addProduct($product, $quantity);
 
     public function update(Request $request, $itemId)
     {
-        $request->validate(['quantity' => 'required|integer|min:0']);
+        $request->validate(['qty' => 'required|integer|min:0']);
 
         try {
-            $this->cartService->updatequantity($itemId, $request->quantity);
+            $this->cartService->updateqty($itemId, $request->qty);
             return back()->with('success', 'Keranjang diperbarui.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

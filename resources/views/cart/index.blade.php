@@ -57,8 +57,8 @@
                                                   class="d-inline-flex align-items-center">
                                                 @csrf
                                                 @method('PATCH')
-                                                <input type="number" name="quantity"
-                                                       value="{{ $item->quantity }}"
+                                                <input type="number" name="qty"
+                                                       value="{{ $item->qty }}"
                                                        min="1" max="{{ $item->product->stock }}"
                                                        class="form-control form-control-sm text-center"
                                                        style="width: 70px;"
@@ -94,7 +94,7 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Total Harga ({{ $cart->items->sum('quantity') }} barang)</span>
+                            <span>Total Harga ({{ $cart->items->sum('qty') }} barang)</span>
                             <span>Rp {{ number_format($cart->items->sum('subtotal'), 0, ',', '.') }}</span>
                         </div>
                         <hr>

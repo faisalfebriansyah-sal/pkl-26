@@ -3,12 +3,12 @@
      FUNGSI: Navigation bar untuk customer
      ================================================ --}}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top" style="z-index: 1030;">
     <div class="container">
         {{-- Logo & Brand --}}
         <a class="navbar-brand text-primary" href="{{ route('home') }}">
             <i class="bi bi-bag-heart-fill me-2"></i>
-            Toko Komik
+            TokoOnline
         </a>
 
         {{-- Mobile Toggle --}}
@@ -74,7 +74,7 @@
                     {{-- User Dropdown --}}
                     <li class="nav-item dropdown ms-2">
                         <a class="nav-link dropdown-toggle d-flex align-items-center"
-                           href="#" id="userDropdown"
+                           href="javascript:void(0)" id="userDropdown"
                            data-bs-toggle="dropdown">
                             <img src="{{ auth()->user()->avatar_url }}"
                                  class="rounded-circle me-2"

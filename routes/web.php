@@ -25,6 +25,7 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Auth\LoginController;
 
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
