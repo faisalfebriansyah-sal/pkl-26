@@ -7,6 +7,10 @@ FUNGSI: Master layout utama (dipakai semua halaman)
 <html lang="id">
 
 <head>
+
+  @vite(['resources/css/app.css', 'resources/js/app.js']) {{-- Stack untuk
+    script tambahan dari child view --}} @stack('scripts')
+    
     {{-- Encoding karakter --}}
     <meta charset="UTF-8">
 
@@ -22,13 +26,14 @@ FUNGSI: Master layout utama (dipakai semua halaman)
     </title>
 
     {{-- Fonts --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     
     {{-- Assets dari Vite --}}
     {{-- app.scss: Bootstrap + custom CSS --}}
     {{-- app.js : Bootstrap JS + custom JS --}}
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     {{-- CSS tambahan per halaman --}}
     @stack('styles')
@@ -136,6 +141,7 @@ FUNGSI: Master layout utama (dipakai semua halaman)
     }
   }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 
 {{-- nonaktifkan dulu sementara baris --}}

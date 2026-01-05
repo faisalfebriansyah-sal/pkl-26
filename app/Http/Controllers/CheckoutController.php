@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/CheckoutController.php
 
 namespace App\Http\Controllers;
 

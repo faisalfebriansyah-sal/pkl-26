@@ -18,7 +18,7 @@ return new class extends Migration {
                   ->cascadeOnDelete();
 
             // Jumlah barang
-            $table->integer('qty')->default(1);
+            $table->integer('quantity')->default(1);
 
             $table->timestamps();
 

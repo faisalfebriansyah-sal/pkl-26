@@ -24,6 +24,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ReportController;
 
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
@@ -160,9 +161,47 @@ Route::middleware(['auth', 'admin']) ->prefix('admin')->name('admin.')->group(fu
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
         Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
+        Route::get('/reports/sales', [ReportController::class, 'sales'])
+        ->name('reports.sales');
+
+        Route::get('/reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+
 });
 
     Route::middleware('auth')->group(function() {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
+
+// routes/web.php
+
+use App\Http\Controllers\PaymentController;
+
+Route::middleware('auth')->group(function () {
+    // ... routes lainnya
+
+    // Payment Routes
+    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
+        ->name('orders.pay');
+    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
+        ->name('orders.success');
+    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
+        ->name('orders.pending');
+});
+
+// routes/web.php
+
+use App\Http\Controllers\MidtransNotificationController;
+
+// ============================================================
+// MIDTRANS WEBHOOK
+// Route ini HARUS public (tanpa auth middleware)
+// Karena diakses oleh SERVER Midtrans, bukan browser user
+// ============================================================
+Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
+    ->name('midtrans.notification');
+
+    // Batasi 5 request per menit
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
+
+    
