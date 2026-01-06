@@ -107,7 +107,7 @@
                                 <tr>
                                     <td>
                                         <a href="{{ route('admin.orders.show', $order) }}" class="fw-bold text-decoration-none">
-                                            #{{ $order->order_number }}
+                                            {{ $order->order_number }}
                                         </a>
                                     </td>
                                     <td>{{ $order->created_at->format('d M Y H:i') }}</td>

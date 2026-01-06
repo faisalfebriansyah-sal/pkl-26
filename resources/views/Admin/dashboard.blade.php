@@ -8,7 +8,7 @@
 
         {{-- Revenue Card --}}
         <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm border-start border-4 border-success h-100">
+            <div class="card border-0 shadow-sm border-start border-4 border- h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -18,7 +18,7 @@
                             </h4>
                         </div>
                         <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-wallet2 text-success fs-3"></i>
+                            <i class="bi bi-wallet2 text-dark fs-3"></i>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
 
         {{-- Pending Action Card --}}
         <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm border-start border-4 border-warning h-100">
+            <div class="card border-0 shadow-sm border-start border-4 border- h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -37,7 +37,7 @@
                             </h4>
                         </div>
                         <div class="bg-warning bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-box-seam text-warning fs-3"></i>
+                            <i class="bi bi-box-seam text-dark fs-3"></i>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
 
         {{-- Low Stock Card --}}
         <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm border-start border-4 border-danger h-100">
+            <div class="card border-0 shadow-sm border-start border-4 border- h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -56,7 +56,7 @@
                             </h4>
                         </div>
                         <div class="bg-danger bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
+                            <i class="bi bi-exclamation-triangle text-dark fs-3"></i>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
 
         {{-- Total Products --}}
         <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm border-start border-4 border-primary h-100">
+            <div class="card border-0 shadow-sm border-start border-4 border- h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -75,7 +75,7 @@
                             </h4>
                         </div>
                         <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-tags text-primary fs-3"></i>
+                            <i class="bi bi-tags text-dark fs-3"></i>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                                 <div class="text-end">
                                     <div class="fw-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</div>
                                     <span class="badge rounded-pill
-                                        {{ $order->payment_status == 'paid' ? 'bg-success bg-opacity-10 text-success' : 'bg-secondary bg-opacity-10 text-secondary' }}">
+                                        {{ $order->payment_status == 'paid' ? 'bg-success bg-opacity-10 text' : 'bg-secondary bg-opacity-10 text' }}">
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </div>
@@ -206,4 +206,4 @@
             }
         });
     </script>
-@endsection 
+@endsection

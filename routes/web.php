@@ -5,27 +5,31 @@
 // FUNGSI: Mendefinisikan semua URL route aplikasi
 // ========================================
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
+
 // ========================================
 // CONTROLLERS
 // ========================================
 
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
-
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\MidtransNotificationController;
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
@@ -45,10 +49,6 @@ Route::get('/tentang', function () {
 
 Route::get('/sapa/{nama}', function ($nama) {
     return "Halo, $nama! Selamat datang di Toko Online kami.";
-});
-
-Route::get('/tes', function () {
-    return 'Halo! Selamat datang di Toko Online kami.';
 });
 
 Route::get('/kategori/{nama}', function ($nama = 'Semua') {
@@ -78,33 +78,14 @@ Route::controller(GoogleController::class)->group(function () {
     Route::get('/auth/google/callback', 'callback')->name('auth.google.callback');
 });
 
+// ============================================================
+// MIDTRANS WEBHOOK
+// Route ini HARUS public (tanpa auth middleware)
+// Karena diakses oleh SERVER Midtrans, bukan browser user
+// ============================================================
+Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
+    ->name('midtrans.notification');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-});
-
-
-// ================================================
-// FILE: routes/web.php
-// FUNGSI: Definisi semua route website
-// ================================================
-
-
-
-// ================================================
-// HALAMAN PUBLIK (Tanpa Login)
-// ================================================
-
-// Homepage
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Katalog Produk
-Route::get('/products', [CatalogController::class, 'index'])->name('catalog.index');
-Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 // ================================================
 // HALAMAN CUSTOMER (Harus Login)
 // ================================================
@@ -132,24 +113,44 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile/google/unlnink', [ProfileController::class, 'unlinkGoogle'])->name('profile.google.unlink');
+    Route::patch('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
 
     // Tambahan profile
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
 
+Route::middleware('auth')->group(function () {
+    // Payment Routes
+    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
+        ->name('orders.pay');
+    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
+        ->name('orders.success');
+    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
+        ->name('orders.pending');
+});
+
 // ================================================
 // HALAMAN ADMIN (Login + Admin)
 // ================================================
 
-Route::middleware(['auth', 'admin']) ->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-        // Dashboard
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        // Admin Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // nama route: admin.dashboard
+        // url: /admin/dashboard
+    
+
 
         // Produk
         Route::resource('products', AdminProductController::class);
@@ -160,49 +161,79 @@ Route::middleware(['auth', 'admin']) ->prefix('admin')->name('admin.')->group(fu
         // Pesanan
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::patch('/orders/{order}/status',[AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
 
-        Route::get('/reports/sales', [ReportController::class, 'sales'])
-        ->name('reports.sales');
 
-        Route::get('/reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+        Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+    });
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Kategori
+    Route::resource('categories', CategoryController::class)->except(['show']); // Kategori biasanya tidak butuh show detail page
+
+    // Produk
+    Route::resource('products', ProductController::class);
+
+    // Route tambahan untuk AJAX Image Handling (jika diperlukan)
+    // ...
 });
 
-    Route::middleware('auth')->group(function() {
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
-});
-
-// routes/web.php
-
-use App\Http\Controllers\PaymentController;
-
-Route::middleware('auth')->group(function () {
-    // ... routes lainnya
-
-    // Payment Routes
-    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
-        ->name('orders.pay');
-    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
-        ->name('orders.success');
-    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
-        ->name('orders.pending');
-});
-
-// routes/web.php
-
-use App\Http\Controllers\MidtransNotificationController;
-
-// ============================================================
-// MIDTRANS WEBHOOK
-// Route ini HARUS public (tanpa auth middleware)
-// Karena diakses oleh SERVER Midtrans, bukan browser user
-// ============================================================
-Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
-    ->name('midtrans.notification');
-
-    // Batasi 5 request per menit
+// Batasi 5 request per menit
 Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
 
-    
+
+// routes/web.php (HAPUS SETELAH TESTING!)
+// Route::get('/debug-midtrans', function () {
+//     // Cek apakah config terbaca
+//     $config = [
+//         'merchant_id'   => config('midtrans.merchant_id'),
+//         'client_key'    => config('midtrans.client_key'),
+//         'server_key'    => config('midtrans.server_key') ? '***SET***' : 'NOT SET',
+//         'is_production' => config('midtrans.is_production'),
+//     ];
+
+//     // Test buat dummy token
+//     try {
+//         $service = new MidtransService();
+
+//         // Buat dummy order untuk testing
+//         $dummyOrder                   = new \App\Models\Order();
+//         $dummyOrder->order_number     = 'TEST-' . time();
+//         $dummyOrder->total_amount     = 10000;
+//         $dummyOrder->shipping_cost    = 0;
+//         $dummyOrder->shipping_name    = 'Test User';
+//         $dummyOrder->shipping_phone   = '08123456789';
+//         $dummyOrder->shipping_address = 'Jl. Test No. 123';
+//         $dummyOrder->user             = (object) [
+//             'name'  => 'Tester',
+//             'email' => 'test@example.com',
+//             'phone' => '08123456789',
+//         ];
+//         // Dummy items
+//         $dummyOrder->items = collect([
+//             (object) [
+//                 'product_id'   => 1,
+//                 'product_name' => 'Produk Test',
+//                 'price'        => 10000,
+//                 'quantity'     => 1,
+//             ],
+//         ]);
+
+//         $token = $service->createSnapToken($dummyOrder);
+
+//         return response()->json([
+//             'status'  => 'SUCCESS',
+//             'message' => 'Berhasil terhubung ke Midtrans!',
+//             'config'  => $config,
+//             'token'   => $token,
+//         ]);
+
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status'  => 'ERROR',
+//             'message' => $e->getMessage(),
+//             'config'  => $config,
+//         ], 500);
+//     }
+// });
